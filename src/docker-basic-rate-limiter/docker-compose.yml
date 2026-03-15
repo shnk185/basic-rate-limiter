@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: basic-rate-limiter-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: basic_rate_limiter
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
+    ports:
+      - "3312:3306"
+    volumes:
+      - db-data-basic-rate-limiter:/var/lib/mysql
+
+  redis:
+    image: redis:7.0
+    container_name: basic-rate-limiter-redis
+    restart: always
+    ports:
+      - "6381:6379"
+    command: [ "redis-server", "--appendonly", "yes" ]
+
+volumes:
+  db-data-basic-rate-limiter:
