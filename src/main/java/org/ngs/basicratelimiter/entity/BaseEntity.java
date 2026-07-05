@@ -27,4 +27,7 @@ public abstract class BaseEntity {
     @Column(nullable = false)
     @LastModifiedDate
     private Instant updatedAt;
+
+    @Column(nullable = false)
+    private boolean deleted;
 }

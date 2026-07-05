@@ -20,7 +20,7 @@ services:
     container_name: basic-rate-limiter-redis
     restart: always
     ports:
-      - "6381:6379"
+      - "6382:6379"
     command: [ "redis-server", "--appendonly", "yes" ]
 
 volumes:
