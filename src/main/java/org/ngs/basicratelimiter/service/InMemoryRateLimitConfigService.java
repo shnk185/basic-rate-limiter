@@ -13,9 +13,7 @@ import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -88,11 +86,12 @@ public class InMemoryRateLimitConfigService {
             log.error("no rate limit found for limitType {} requestMethod {} path {}", limitType, requestMethod, path);
             throw new RuntimeException("no rate limit found for path");
         }
-        else return configByPath.get(path);
-    }
-
-    public Set<String> fetchPaths(LimitType limitType, RequestMethod requestMethod) {
-        return inMemoryRateLimitConfig.get(limitType).get(requestMethod).keySet();
+        else {
+            RateLimitConfig config = configByPath.get(path);
+            log.info("fetched rate limit config {} for params limitType {} requestMethod {} path {}", config, limitType,
+                    requestMethod, path);
+            return config;
+        }
     }
 
     public ConcurrentHashMap<String, PathPattern> fetchPathPatternMap() {
