@@ -53,7 +53,7 @@ public class RateLimitConfigController {
                                                                         @RequestParam(name = "method", required = false) String method,
                                                                         @RequestParam(name = "limitType", required = false) LimitType limitType,
                                                                         @RequestHeader(Constants.X_API_KEY) String apiKey,
-                                                                        @RequestParam Pageable pageable) {
+                                                                        Pageable pageable) {
         log.info("received fetch rate limit config request path {} method {} limitType {} pageable {}", path, method, limitType, pageable);
         Page<RateLimitConfigEntity> response = rateLimitConfigService.fetchRateLimitConfigs(apiKey, path, method, limitType, pageable);
         log.info("fetch rate limit config response {}", response);

@@ -29,8 +29,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/rateLimit").permitAll()
                         .requestMatchers(HttpMethod.GET, "/rateLimit/configs").permitAll()
                         .requestMatchers(HttpMethod.POST, "/rateLimit/configs").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/rateLimit/configs").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/rateLimit/configs").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/rateLimit/configs/*").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/rateLimit/configs/*").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
