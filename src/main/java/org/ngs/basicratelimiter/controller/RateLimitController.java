@@ -33,9 +33,9 @@ public class RateLimitController {
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long userId = null;
-        if (auth != null && auth.getPrincipal() instanceof String) {
+        if (auth != null && auth.getPrincipal() instanceof Long) {
             try {
-                userId = Long.parseLong((String) auth.getPrincipal());
+                userId = (long) auth.getPrincipal();
             } catch (NumberFormatException e) {
                 log.info("non auth user");
             }

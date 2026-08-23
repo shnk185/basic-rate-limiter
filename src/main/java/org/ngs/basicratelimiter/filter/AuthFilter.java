@@ -61,6 +61,7 @@ public class AuthFilter extends OncePerRequestFilter {
                 Long userId = Long.parseLong(claims.getSubject());
                 String logoutEpoch = redisTemplate.opsForValue().get(RedisKeyUtil.generateLogoutKey(userId));
                 if (expiresAt.before(now) || logoutEpoch != null) {
+                    log.info("user logged out already {} and {}", expiresAt, now);
                     filterChain.doFilter(request, response);
                     return;
                 }
