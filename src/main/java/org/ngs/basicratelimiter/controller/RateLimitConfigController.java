@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -21,6 +22,7 @@ public class RateLimitConfigController {
     private RateLimitConfigService rateLimitConfigService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RateLimitConfig> createRateLimitConfig(@RequestBody RateLimitConfig rateLimitConfig,
                                                                          @RequestHeader(Constants.X_API_KEY) String apiKey) {
         log.info("received create rate limit config request {}", rateLimitConfig);
@@ -30,6 +32,7 @@ public class RateLimitConfigController {
     }
 
     @PutMapping("/{rateLimitConfigId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RateLimitConfig> updateRateLimitConfig(@RequestBody RateLimitConfig rateLimitConfig,
                                                                  @RequestHeader(Constants.X_API_KEY) String apiKey,
                                                                  @PathVariable Long rateLimitConfigId) {
@@ -40,6 +43,7 @@ public class RateLimitConfigController {
     }
 
     @DeleteMapping("/{rateLimitConfigId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RateLimitConfig> deleteRateLimitConfig(@RequestHeader(Constants.X_API_KEY) String apiKey,
                                                                  @PathVariable Long rateLimitConfigId) {
         log.info("received delete rate limit config request {}",  rateLimitConfigId);
@@ -49,6 +53,7 @@ public class RateLimitConfigController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<RateLimitConfigEntity>> fetchRateLimitConfig(@RequestParam(name = "path", required = false) String path,
                                                                         @RequestParam(name = "method", required = false) String method,
                                                                         @RequestParam(name = "limitType", required = false) LimitType limitType,

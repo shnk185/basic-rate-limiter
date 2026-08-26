@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.ngs.basicratelimiter.dto.RateLimitConfig;
 import org.ngs.basicratelimiter.enums.LimitType;
 import org.ngs.basicratelimiter.enums.RateLimitHeader;
+import org.ngs.basicratelimiter.exception.RateLimitExceededException;
 import org.ngs.basicratelimiter.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,15 +24,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class RateLimitService {
 
-    @Autowired
-    private InMemoryRateLimitConfigService inMemoryRateLimitConfigService;
+    private final InMemoryRateLimitConfigService inMemoryRateLimitConfigService;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisScript<Long> rateLimitRedisScript;
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
-
-    @Autowired
-    @Qualifier("rateLimitRedisScript")
-    private RedisScript<Long> rateLimitRedisScript;
+    public RateLimitService(InMemoryRateLimitConfigService inMemoryRateLimitConfigService,
+                            RedisTemplate<String, String> redisTemplate,
+                            @Qualifier("rateLimitRedisScript") RedisScript<Long> rateLimitRedisScript) {
+        this.inMemoryRateLimitConfigService = inMemoryRateLimitConfigService;
+        this.redisTemplate = redisTemplate;
+        this.rateLimitRedisScript = rateLimitRedisScript;
+    }
 
     public void rateLimit(Map<RateLimitHeader, String> rateLimitParams, Long userId) {
         String method = rateLimitParams.get(RateLimitHeader.X_REQUEST_METHOD);
@@ -58,7 +61,7 @@ public class RateLimitService {
                 String.valueOf(rateLimitConfig.getRefillRate()),
                 String.valueOf(Instant.now().getEpochSecond()));
         if (res == null || res == 0L) {
-            throw new RuntimeException("rate limit exceeded");
+            throw new RateLimitExceededException("rate limit exceeded");
         }
     }
 
@@ -70,7 +73,7 @@ public class RateLimitService {
                 String.valueOf(rateLimitConfig.getRefillRate()),
                 String.valueOf(Instant.now().getEpochSecond()));
         if (res == null || res == 0L) {
-            throw new RuntimeException("rate limit exceeded");
+            throw new RateLimitExceededException("rate limit exceeded");
         }
     }
 
@@ -83,7 +86,7 @@ public class RateLimitService {
                 String.valueOf(rateLimitConfig.getRefillRate()),
                 String.valueOf(Instant.now().getEpochSecond()));
         if (res == null || res == 0L) {
-            throw new RuntimeException("rate limit exceeded");
+            throw new RateLimitExceededException("rate limit exceeded");
         }
     }
 

@@ -42,6 +42,11 @@ public class AuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            log.info("skipping auth for admin");
+            filterChain.doFilter(request, response);
+            return;
+        }
         Optional<Cookie> accessTokenOptional = Stream.ofNullable(request.getCookies()).flatMap(Arrays::stream)
                 .filter(x -> x.getName().equals(CookieConstants.ACCESS_TOKEN)).findFirst();
         if (accessTokenOptional.isPresent()) {
