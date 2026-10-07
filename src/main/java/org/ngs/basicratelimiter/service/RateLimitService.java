@@ -47,6 +47,7 @@ public class RateLimitService {
 
         if (userId != null) {
             rateLimitAuthenticatedUser(userId, method, matchedPath);
+            rateLimitAuthenticatedGlobal(method, matchedPath);
         } else {
             rateLimitIPAddress(ip, method, matchedPath);
             rateLimitNonAuthUser(method, matchedPath);
@@ -68,6 +69,18 @@ public class RateLimitService {
     private void rateLimitIPAddress(String ip, String method, String matchedPath) {
         String key = RedisKeyUtil.generateIPRateLimitKey(ip, method, matchedPath);
         RateLimitConfig rateLimitConfig = inMemoryRateLimitConfigService.fetchConfig(LimitType.IP, RequestMethod.valueOf(method), matchedPath);
+        Long res = redisTemplate.execute(rateLimitRedisScript, List.of(key),
+                String.valueOf(rateLimitConfig.getBucketCapacity()),
+                String.valueOf(rateLimitConfig.getRefillRate()),
+                String.valueOf(Instant.now().getEpochSecond()));
+        if (res == null || res == 0L) {
+            throw new RateLimitExceededException("rate limit exceeded");
+        }
+    }
+
+    private void rateLimitAuthenticatedGlobal(String method, String matchedPath) {
+        String key = RedisKeyUtil.generateGlobalUserRateLimitKey(method, matchedPath);
+        RateLimitConfig rateLimitConfig = inMemoryRateLimitConfigService.fetchConfig(LimitType.GLOBAL_AUTH, RequestMethod.valueOf(method), matchedPath);
         Long res = redisTemplate.execute(rateLimitRedisScript, List.of(key),
                 String.valueOf(rateLimitConfig.getBucketCapacity()),
                 String.valueOf(rateLimitConfig.getRefillRate()),

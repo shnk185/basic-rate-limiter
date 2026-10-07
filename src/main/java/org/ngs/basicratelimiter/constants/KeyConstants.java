@@ -8,6 +8,7 @@ public class KeyConstants {
     public static final String IP = "ip";
     public static final String REQUEST_METHOD = "request_method";
     public static final String USER_ID = "user_id";
+    public static final String GLOBAL_AUTH = "global_auth";
     public static final String LOG_OUT = "log_out";
     public static final String UNDERSCORE = "_";
 }

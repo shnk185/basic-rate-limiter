@@ -3,5 +3,6 @@ package org.ngs.basicratelimiter.enums;
 public enum LimitType {
     AUTH,
     IP,
-    NON_AUTH
+    NON_AUTH,
+    GLOBAL_AUTH
 }

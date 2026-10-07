@@ -1,6 +1,5 @@
 package org.ngs.basicratelimiter.config;
 
-import org.ngs.basicratelimiter.filter.ApiKeyFilter;
 import org.ngs.basicratelimiter.filter.AuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,10 +22,6 @@ public class SecurityConfig {
     @Autowired
     private AuthFilter authFilter;
 
-    @Autowired
-    private ApiKeyFilter apiKeyFilter;
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
@@ -39,7 +34,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/rateLimit/configs/*").permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }

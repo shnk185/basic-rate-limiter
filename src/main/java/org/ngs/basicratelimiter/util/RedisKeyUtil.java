@@ -34,4 +34,10 @@ public class RedisKeyUtil {
         return key;
     }
 
+    public static String generateGlobalUserRateLimitKey(String method, String matchedPath) {
+        String key = String.join(KeyConstants.UNDERSCORE, KeyConstants.BASIC_RATE_LIMITER_SERVICE, KeyConstants.RATE_LIMIT,
+                KeyConstants.REQUEST_METHOD, method, KeyConstants.REQUEST_PATH, KeyConstants.GLOBAL_AUTH, matchedPath);
+        log.info("generated non auth rate limit key {}", key);
+        return key;
+    }
 }
