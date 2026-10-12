@@ -11,7 +11,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: userpass
     ports:
-      - "3312:3306"
+      - "3306:3306"
     volumes:
       - db-data-basic-rate-limiter:/var/lib/mysql
 
@@ -20,7 +20,7 @@ services:
     container_name: basic-rate-limiter-redis
     restart: always
     ports:
-      - "6382:6379"
+      - "6379:6379"
     command: [ "redis-server", "--appendonly", "yes" ]
 
 volumes:
