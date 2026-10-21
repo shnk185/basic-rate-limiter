@@ -1,12 +1,12 @@
 package org.ngs.basicratelimiter.service;
 
+import lombok.RequiredArgsConstructor;
 import org.ngs.basicratelimiter.config.BasicRateLimiterConfig;
 import org.ngs.basicratelimiter.dto.RateLimitConfig;
 import org.ngs.basicratelimiter.entity.RateLimitConfigEntity;
 import org.ngs.basicratelimiter.enums.LimitType;
 import org.ngs.basicratelimiter.repository.RateLimitConfigRepository;
 import org.ngs.basicratelimiter.repository.specification.RateLimitConfigSpecification;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,19 +14,13 @@ import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
 @Service
+@RequiredArgsConstructor
 public class RateLimitConfigService {
 
-    @Autowired
-    private BasicRateLimiterConfig basicRateLimiterConfig;
-
-    @Autowired
-    private RateLimitConfigRepository rateLimitConfigRepository;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private InMemoryRateLimitConfigService inMemoryRateLimitConfigService;
+    private final BasicRateLimiterConfig basicRateLimiterConfig;
+    private final RateLimitConfigRepository rateLimitConfigRepository;
+    private final ObjectMapper objectMapper;
+    private final InMemoryRateLimitConfigService inMemoryRateLimitConfigService;
 
     public RateLimitConfig createRateLimit(RateLimitConfig rateLimitConfig, String apiKey) {
         if (!basicRateLimiterConfig.getAdminKey().equals(apiKey)) {

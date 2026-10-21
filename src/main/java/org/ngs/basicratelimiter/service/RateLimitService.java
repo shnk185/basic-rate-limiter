@@ -6,7 +6,6 @@ import org.ngs.basicratelimiter.enums.LimitType;
 import org.ngs.basicratelimiter.enums.RateLimitHeader;
 import org.ngs.basicratelimiter.exception.RateLimitExceededException;
 import org.ngs.basicratelimiter.util.RedisKeyUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;

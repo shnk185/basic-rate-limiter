@@ -1,12 +1,12 @@
 package org.ngs.basicratelimiter.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ngs.basicratelimiter.constants.Constants;
 import org.ngs.basicratelimiter.dto.RateLimitConfig;
 import org.ngs.basicratelimiter.entity.RateLimitConfigEntity;
 import org.ngs.basicratelimiter.enums.LimitType;
 import org.ngs.basicratelimiter.service.RateLimitConfigService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/rateLimit/configs")
 public class RateLimitConfigController {
 
-    @Autowired
-    private RateLimitConfigService rateLimitConfigService;
+    private final RateLimitConfigService rateLimitConfigService;
 
     @PostMapping
     public ResponseEntity<RateLimitConfig> createRateLimitConfig(@RequestBody RateLimitConfig rateLimitConfig,

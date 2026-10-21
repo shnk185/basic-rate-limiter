@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.ngs.basicratelimiter.constants.CookieConstants;
 import org.ngs.basicratelimiter.util.RedisKeyUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,13 +30,12 @@ import java.util.stream.Stream;
 public class AuthFilter extends OncePerRequestFilter {
 
     private final SecretKey secretKey;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
-
-    public AuthFilter(@Value("${app.jwt.secret}") String jwtSecret) {
+    public AuthFilter(@Value("${app.jwt.secret}") String jwtSecret, RedisTemplate<String, String> redisTemplate) {
         byte[] decoded = Base64.getDecoder().decode(jwtSecret);
         this.secretKey = Keys.hmacShaKeyFor(decoded);
+        this.redisTemplate = redisTemplate;
     }
 
     @Override

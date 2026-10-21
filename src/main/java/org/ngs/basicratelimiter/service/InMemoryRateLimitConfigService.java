@@ -1,12 +1,12 @@
 package org.ngs.basicratelimiter.service;
 
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ngs.basicratelimiter.dto.RateLimitConfig;
 import org.ngs.basicratelimiter.entity.RateLimitConfigEntity;
 import org.ngs.basicratelimiter.enums.LimitType;
 import org.ngs.basicratelimiter.repository.RateLimitConfigRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,18 +19,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class InMemoryRateLimitConfigService {
 
     private volatile ConcurrentHashMap<String, PathPattern> pathPatternMap;
 
     private volatile ConcurrentHashMap<LimitType, ConcurrentHashMap<RequestMethod,
             ConcurrentHashMap<String, RateLimitConfig>>> inMemoryRateLimitConfig;
-
-    @Autowired
-    private RateLimitConfigRepository rateLimitConfigRepository;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final RateLimitConfigRepository rateLimitConfigRepository;
+    private final ObjectMapper objectMapper;
 
     @PostConstruct
     public void setUp() {

@@ -1,10 +1,10 @@
 package org.ngs.basicratelimiter.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ngs.basicratelimiter.enums.RateLimitHeader;
 import org.ngs.basicratelimiter.service.RateLimitService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +17,11 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/rateLimit")
 public class RateLimitController {
 
-    @Autowired
-    private RateLimitService rateLimitService;
+    private final RateLimitService rateLimitService;
 
     @GetMapping
     public void rateLimit(HttpServletRequest httpServletRequest) {
