@@ -7,6 +7,7 @@ import org.ngs.basicratelimiter.entity.RateLimitConfigEntity;
 import org.ngs.basicratelimiter.enums.LimitType;
 import org.ngs.basicratelimiter.repository.RateLimitConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.util.pattern.PathPattern;
@@ -20,9 +21,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class InMemoryRateLimitConfigService {
 
-    private ConcurrentHashMap<String, PathPattern> pathPatternMap;
+    private volatile ConcurrentHashMap<String, PathPattern> pathPatternMap;
 
-    private ConcurrentHashMap<LimitType, ConcurrentHashMap<RequestMethod,
+    private volatile ConcurrentHashMap<LimitType, ConcurrentHashMap<RequestMethod,
             ConcurrentHashMap<String, RateLimitConfig>>> inMemoryRateLimitConfig;
 
     @Autowired
@@ -37,11 +38,10 @@ public class InMemoryRateLimitConfigService {
         this.pathPatternMap = createPathPatterns();
     }
 
+    @Scheduled(cron = "0 * * * * *")
     public void update() {
-        var config = readConfig();
-        var patterns = createPathPatterns();
-        inMemoryRateLimitConfig = config;
-        pathPatternMap = patterns;
+        inMemoryRateLimitConfig = readConfig();
+        pathPatternMap = createPathPatterns();
     }
 
     private ConcurrentHashMap<String, PathPattern> createPathPatterns() {
